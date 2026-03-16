@@ -1,7 +1,5 @@
 package tradelog;
 
-import tradelog.logic.command.Command;
-import tradelog.logic.command.ListCommand;
 import tradelog.model.TradeList;
 import tradelog.storage.Storage;
 import tradelog.ui.Ui;
