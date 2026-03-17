@@ -17,10 +17,10 @@ public class TradeLog {
     private final Storage storage;
 
     /** Constructs a TradeLog instance with fresh data structures. */
-    public TradeLog() {
+    public TradeLog(String filePath) {
         tradeList = new TradeList();
         ui = new Ui();
-        storage = new Storage();
+        storage = new Storage(filePath);
     }
 
     /** Starts the main input loop. */
@@ -41,6 +41,6 @@ public class TradeLog {
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
-        new TradeLog().run();
+        new TradeLog("./data/trades.txt").run();
     }
 }
