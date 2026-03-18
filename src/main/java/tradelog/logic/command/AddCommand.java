@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import tradelog.exception.TradeLogException;
 import tradelog.logic.parser.ArgumentTokeniser;
+import tradelog.logic.parser.ParserUtil;
 import tradelog.model.Trade;
 import tradelog.model.TradeList;
 import tradelog.storage.Storage;
@@ -16,7 +17,8 @@ import tradelog.ui.Ui;
 public class AddCommand extends Command {
 
     /** The required prefixes for the add command. */
-    public static final String[] REQUIRED_PREFIXES = {"t/", "d/", "dir/", "e/", "x/", "s/", "o/", "strat/"};
+    public static final String[] REQUIRED_PREFIXES = {
+        "t/", "d/", "dir/", "e/", "x/", "s/", "o/", "strat/"};
 
     private final Trade addTrade;
 
@@ -37,27 +39,14 @@ public class AddCommand extends Command {
             }
         }
 
-        double entryPrice;
-        double exitPrice;
-        double stopLossPrice;
-        try {
-            entryPrice = Double.parseDouble(parsedArgs.get("e/"));
-            exitPrice = Double.parseDouble(parsedArgs.get("x/"));
-            stopLossPrice = Double.parseDouble(parsedArgs.get("s/"));
-        } catch (NumberFormatException e) {
-            throw new TradeLogException("Entry, Exit, and Stop Loss must be valid numbers!");
-        }
+        double entryPrice = ParserUtil.parsePrice(parsedArgs.get("e/"), "Entry");
+        double exitPrice = ParserUtil.parsePrice(parsedArgs.get("x/"), "Exit");
+        double stopLossPrice = ParserUtil.parsePrice(parsedArgs.get("s/"), "Stop Loss");
 
-        if (entryPrice == exitPrice) {
-            throw new TradeLogException("Entry price and exit price cannot have the same value.");
-        }
+        ParserUtil.validatePrices(entryPrice, stopLossPrice);
 
-        String ticker = parsedArgs.get("t/").trim().toUpperCase();
-        String rawDir = parsedArgs.get("dir/").trim().toLowerCase();
-        if (!rawDir.equals("long") && !rawDir.equals("short")) {
-            throw new TradeLogException("Direction must be exactly 'long' or 'short'!");
-        }
-        String direction = rawDir.substring(0, 1).toUpperCase() + rawDir.substring(1);
+        String ticker = ParserUtil.parseTicker(parsedArgs.get("t/"));
+        String direction = ParserUtil.parseDirection(parsedArgs.get("dir/"));
         String date = parsedArgs.get("d/").trim();
         String outcome = parsedArgs.get("o/").trim();
         String strategy = parsedArgs.get("strat/").trim();

@@ -110,21 +110,93 @@ public class Trade {
     }
 
     /**
-     * Returns a single-line string representation of the trade.
-     * Matches the expected output: 1. AAPL | 2026-02-18 | Long | E:180 | TP:190 | SL:170 | Win | Breakout
+     * Returns a single-line string representation of the trade for display in the list.
+     * Format: AAPL | 2026-02-18 | Long | E:180 | TP:190 | SL:170 | Win | Breakout
      *
      * @return Formatted trade details.
      */
     @Override
     public String toString() {
-        return ticker + " | " +
-                date + " | " +
-                direction + " | " +
-                "E:" + formatPrice(entryPrice) + " | " +
-                "TP:" + formatPrice(exitPrice) + " | " +
-                "SL:" + formatPrice(stopLossPrice) + " | " +
-                outcome + " | " +
-                strategy;
+        return ticker + " | "
+                + date + " | "
+                + direction + " | "
+                + "E:" + formatPrice(entryPrice) + " | "
+                + "TP:" + formatPrice(exitPrice) + " | "
+                + "SL:" + formatPrice(stopLossPrice) + " | "
+                + outcome + " | "
+                + strategy;
+    }
+
+    /**
+     * Returns the ticker symbol.
+     *
+     * @return The ticker symbol.
+     */
+    public String getTicker() {
+        return ticker;
+    }
+
+    /**
+     * Returns the trade date.
+     *
+     * @return The date in YYYY-MM-DD format.
+     */
+    public String getDate() {
+        return date;
+    }
+
+    /**
+     * Returns the trade direction.
+     *
+     * @return The direction (Long or Short).
+     */
+    public String getDirection() {
+        return direction;
+    }
+
+    /**
+     * Returns the entry price.
+     *
+     * @return The entry price.
+     */
+    public double getEntryPrice() {
+        return entryPrice;
+    }
+
+    /**
+     * Returns the exit price.
+     *
+     * @return The exit price.
+     */
+    public double getExitPrice() {
+        return exitPrice;
+    }
+
+    /**
+     * Returns the stop loss price.
+     *
+     * @return The stop loss price.
+     */
+    public double getStopLossPrice() {
+        return stopLossPrice;
+    }
+
+    /**
+     * Returns the trade outcome.
+     *
+     * @return The outcome (Win or Loss).
+     */
+    public String getOutcome() {
+        return outcome;
+    }
+
+    /**
+     * Returns the trade strategy.
+     *
+     * @return The strategy description.
+     */
+    public String getStrategy() {
+        return strategy;
     }
 
     /**

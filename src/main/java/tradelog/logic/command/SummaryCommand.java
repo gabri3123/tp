@@ -10,6 +10,7 @@ import tradelog.ui.Ui;
  * Handles both the mathematical calculations of the TradeList and the UI output.
  */
 public class SummaryCommand extends Command {
+
     /**
      * Executes the summary command by calculating metrics directly from the TradeList
      * and displaying the formatted performance report.
@@ -21,9 +22,7 @@ public class SummaryCommand extends Command {
     @Override
     public void execute(TradeList tradeList, Ui ui, Storage storage) {
         if (tradeList.isEmpty()) {
-            ui.showLine();
-            System.out.println("No trades available to generate a summary.");
-            ui.showLine();
+            ui.showSummaryEmpty();
             return;
         }
 
@@ -38,11 +37,10 @@ public class SummaryCommand extends Command {
             Trade trade = tradeList.getTrade(i);
             double rr = trade.getRiskRewardRatio();
             totalR += rr;
-
             if (rr > 0) {
                 winningTrades++;
                 totalWinR += rr;
-            } else if  (rr < 0) {
+            } else if (rr < 0) {
                 losingTrades++;
                 totalLossR += Math.abs(rr);
             }
@@ -53,17 +51,6 @@ public class SummaryCommand extends Command {
         double averageLoss = losingTrades > 0 ? (totalLossR / losingTrades) : 0;
         double expectedValue = totalR / totalTrades;
 
-        String expectedValueSign = expectedValue > 0 ? "+" : "-";
-        String totalRSign = totalR > 0 ? "+" : "-";
-
-        ui.showLine();
-        System.out.println("Overall Performance:\n");
-        System.out.println("Total Trades: " + totalTrades);
-        System.out.printf("Win Rate: %.0f%%\n", winRate);
-        System.out.printf("Average Win: %.2fR\n", averageWin);
-        System.out.printf("Average Loss: %.2fR\n", averageLoss);
-        System.out.printf("Overall EV: %s%.2fR\n", expectedValueSign, expectedValue);
-        System.out.printf("Total R: %s%.2fR\n", totalRSign, totalR);
-        ui.showLine();
+        ui.showSummary(totalTrades, winRate, averageWin, averageLoss, expectedValue, totalR);
     }
 }
