@@ -53,6 +53,10 @@ public class AddCommand extends Command {
 
         this.addTrade = new Trade(ticker, date, direction,
                 entryPrice, exitPrice, stopLossPrice, outcome, strategy);
+
+        assert addTrade.getTicker().equals(ticker) : "Ticker should match parsed value";
+        assert addTrade.getEntryPrice() == entryPrice : "Entry price should match parsed value";
+        assert addTrade.getStrategy().equals(strategy) : "Last field check to ensure full assignment";
     }
 
     /**
@@ -65,7 +69,17 @@ public class AddCommand extends Command {
      */
     @Override
     public void execute(TradeList tradeList, Ui ui, Storage storage) {
+        int initialSize = tradeList.size();
+
         tradeList.addTrade(addTrade);
+
+        assert tradeList.size() == initialSize + 1 : "TradeList size should increase by 1 after adding";
+
+        Trade lastTrade = tradeList.getTrade(tradeList.size() - 1);
+        assert lastTrade.getTicker().equals(addTrade.getTicker()) : "Last trade ticker should match added trade";
+        assert lastTrade.getEntryPrice() == addTrade.getEntryPrice() : "Last trade entryPrice should match added trade";
+        assert lastTrade.getStrategy().equals(addTrade.getStrategy()) : "Last trade strategy should match added trade";
+
         ui.printTrade(addTrade);
         ui.showTradeAdded();
     }

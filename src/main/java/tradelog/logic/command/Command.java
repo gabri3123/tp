@@ -1,7 +1,5 @@
 package tradelog.logic.command;
 
-import java.util.logging.Logger;
-
 import tradelog.model.TradeList;
 import tradelog.storage.Storage;
 import tradelog.ui.Ui;
@@ -11,9 +9,6 @@ import tradelog.ui.Ui;
  * Every command must implement {@code execute}.
  */
 public abstract class Command {
-
-    /** Logger for tracking command execution. */
-    protected static final Logger logger = Logger.getLogger(Command.class.getName());
 
     /**
      * Executes this command.

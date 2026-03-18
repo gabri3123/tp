@@ -28,6 +28,15 @@ public class Trade {
      */
     public Trade(String ticker, String date, String direction, double entryPrice,
                  double exitPrice, double stopLossPrice, String outcome, String strategy) {
+        assert direction.equalsIgnoreCase("Long") || direction.equalsIgnoreCase("Short") :
+                "Direction must be 'Long' or 'Short'";
+        assert !Double.isNaN(entryPrice) && !Double.isInfinite(entryPrice) :
+                "Entry price cannot be NaN or infinite";
+        assert !Double.isNaN(exitPrice) && !Double.isInfinite(exitPrice) :
+                "Exit price cannot be NaN or infinite";
+        assert !Double.isNaN(stopLossPrice) && !Double.isInfinite(stopLossPrice) :
+                "Stop loss price cannot be NaN or infinite";
+
         this.ticker = ticker;
         this.date = date;
         this.direction = direction;
@@ -47,16 +56,23 @@ public class Trade {
      */
     public double getRiskRewardRatio() {
         double risk = Math.abs(entryPrice - stopLossPrice);
+        assert risk >= 0 : "Risk cannot be negative";
+
         if (risk == 0) {
             return 0;
         }
         double reward;
         if (direction.equalsIgnoreCase("short")) {
             reward = entryPrice - exitPrice;
+            assert !Double.isNaN(reward) && !Double.isInfinite(reward) :
+                    "Reward cannot be NaN or infinite";
         } else {
             reward = exitPrice - entryPrice;
         }
-        return reward / risk;
+        double riskRewardRatio = reward / risk;
+        assert !Double.isNaN(riskRewardRatio) && !Double.isInfinite(riskRewardRatio) :
+                "Risk:Reward ratio cannot be NaN or infinite";
+        return riskRewardRatio;
     }
 
     /**
@@ -66,6 +82,8 @@ public class Trade {
      * @return The formatted price string (e.g., "180" instead of "180.0").
      */
     private String formatPrice(double price) {
+        assert !Double.isNaN(price) && !Double.isInfinite(price) : "Price cannot be NaN or infinite";
+
         if (price == (long) price) {
             return String.format("%d", (long) price);
         } else {
@@ -141,6 +159,7 @@ public class Trade {
      *
      * @return The date in YYYY-MM-DD format.
      */
+    @SuppressWarnings("unused")
     public String getDate() {
         return date;
     }
@@ -150,6 +169,7 @@ public class Trade {
      *
      * @return The direction (Long or Short).
      */
+    @SuppressWarnings("unused")
     public String getDirection() {
         return direction;
     }
@@ -159,6 +179,7 @@ public class Trade {
      *
      * @return The entry price.
      */
+    @SuppressWarnings("unused")
     public double getEntryPrice() {
         return entryPrice;
     }
@@ -168,6 +189,7 @@ public class Trade {
      *
      * @return The exit price.
      */
+    @SuppressWarnings("unused")
     public double getExitPrice() {
         return exitPrice;
     }
@@ -177,6 +199,7 @@ public class Trade {
      *
      * @return The stop loss price.
      */
+    @SuppressWarnings("unused")
     public double getStopLossPrice() {
         return stopLossPrice;
     }
@@ -186,6 +209,7 @@ public class Trade {
      *
      * @return The outcome (Win or Loss).
      */
+    @SuppressWarnings("unused")
     public String getOutcome() {
         return outcome;
     }

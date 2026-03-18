@@ -1,6 +1,7 @@
 package tradelog.logic.command;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import tradelog.model.TradeList;
 import tradelog.storage.Storage;
@@ -11,6 +12,9 @@ import tradelog.ui.Ui;
  * Corresponds to the user command: {@code list}
  */
 public class ListCommand extends Command {
+
+    /** Logger for tracking command execution. */
+    private static final Logger logger = Logger.getLogger(ListCommand.class.getName());
 
     /**
      * Executes the list command by printing all trades via the UI.

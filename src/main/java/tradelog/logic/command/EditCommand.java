@@ -63,8 +63,14 @@ public class EditCommand extends Command {
                 return;
             }
             Trade tradeToEdit = tradeList.getTrade(targetIndex);
+
+            assert tradeToEdit != null : "Retrieved trade should not be null";
+            assert targetIndex < tradeList.size() : "Trade index must be within bounds";
+
             if (parsedArgs.containsKey("t/")) {
                 tradeToEdit.setTicker(ParserUtil.parseTicker(parsedArgs.get("t/")));
+                assert tradeToEdit.getTicker().equals(parsedArgs.get("t/").toUpperCase()) :
+                        "Ticker should be updated";
             }
             if (parsedArgs.containsKey("d/")) {
                 tradeToEdit.setDate(parsedArgs.get("d/"));

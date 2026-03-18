@@ -35,6 +35,8 @@ public class SummaryCommand extends Command {
 
         for (int i = 0; i < totalTrades; i++) {
             Trade trade = tradeList.getTrade(i);
+            assert trade != null : "Trade at index " + i + " should not be null";
+
             double rr = trade.getRiskRewardRatio();
             totalR += rr;
             if (rr > 0) {
@@ -47,9 +49,19 @@ public class SummaryCommand extends Command {
         }
 
         double winRate = ((double) winningTrades / totalTrades) * 100;
+        assert winRate >= 0 && winRate <= 100 : "Win rate should be between 0% and 100%";
+
         double averageWin = winningTrades > 0 ? (totalWinR / winningTrades) : 0;
+        assert averageWin >= 0 : "Average win should be non-negative";
+
         double averageLoss = losingTrades > 0 ? (totalLossR / losingTrades) : 0;
+        assert averageLoss >= 0 : "Average loss should be non-negative";
+
         double expectedValue = totalR / totalTrades;
+        assert Math.abs(expectedValue - (totalR / totalTrades)) < 1e-10 :
+                "EV should be totalR divided by totalTrades";
+        assert Math.abs(totalR - (totalWinR - totalLossR)) < 1e-10 :
+                "totalR should equal totalWinR - totalLossR";
 
         ui.showSummary(totalTrades, winRate, averageWin, averageLoss, expectedValue, totalR);
     }
