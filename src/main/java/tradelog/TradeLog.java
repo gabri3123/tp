@@ -81,6 +81,12 @@ public class TradeLog {
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
+        try {
+            java.util.logging.LogManager.getLogManager().readConfiguration(
+                    TradeLog.class.getResourceAsStream("/logging.properties"));
+        } catch (Exception e) {
+            // fall back to default logging if config fails
+        }
         new TradeLog("./data/trades.txt").run();
     }
 }
