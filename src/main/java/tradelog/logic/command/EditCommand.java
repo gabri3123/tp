@@ -13,11 +13,12 @@ import tradelog.ui.Ui;
  * Represents a command to edit an existing trade in the TradeLog.
  * Supports partial updates where only specified fields are modified.
  */
+@SuppressWarnings("unused")
 public class EditCommand extends Command {
 
     /** All possible prefixes that can be used for editing. */
     private static final String[] ACCEPTED_PREFIXES = {
-            "t/", "d/", "dir/", "e/", "x/", "s/", "o/", "strat/"
+        "t/", "d/", "dir/", "e/", "x/", "s/", "o/", "strat/"
     };
 
     private final int targetIndex;
@@ -29,6 +30,7 @@ public class EditCommand extends Command {
      * @param arguments The raw string containing the index and optional prefixes.
      * @throws TradeLogException If the index is missing, invalid, or no fields are provided.
      */
+    @SuppressWarnings("unused")
     public EditCommand(String arguments) throws TradeLogException {
         String trimmedArgs = arguments.trim();
         if (trimmedArgs.isEmpty()) {
