@@ -42,7 +42,7 @@ public class EditCommand extends Command {
             throw new TradeLogException("The trade index must be a valid number.");
         }
         String prefixArgs = (parts.length > 1) ? parts[1] : "";
-        this.parsedArgs = ArgumentTokeniser.tokenise(prefixArgs, ACCEPTED_PREFIXES);
+        parsedArgs = ArgumentTokeniser.tokenise(prefixArgs, ACCEPTED_PREFIXES);
         if (parsedArgs.isEmpty()) {
             throw new TradeLogException("At least one field must be specified to edit.");
         }
