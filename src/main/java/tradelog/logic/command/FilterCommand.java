@@ -1,6 +1,7 @@
 package tradelog.logic.command;
 
 import java.util.HashMap;
+import java.util.Arrays;
 
 import tradelog.exception.TradeLogException;
 import tradelog.logic.parser.ArgumentTokeniser;
@@ -20,6 +21,7 @@ public class FilterCommand extends Command {
     private final String ticker;
     private final String strategy;
     private final String date;
+    private final boolean isPartial;
 
     /**
      * Constructs a FilterCommand by parsing the arguments string.
@@ -33,6 +35,7 @@ public class FilterCommand extends Command {
         ticker = ParserUtil.parseTicker(parsedArgs.getOrDefault("t/", ""));
         strategy = parsedArgs.getOrDefault("strat/", "").trim();
         date = parsedArgs.getOrDefault("d/", "").trim();
+        isPartial = Arrays.asList(arguments.split(" ")).contains("-p");
 
         if (ticker.isEmpty() && strategy.isEmpty() && date.isEmpty()) {
             throw new TradeLogException("Use at least one filter: t/<ticker>, strat/<strategy>, d/<date>");
@@ -47,10 +50,20 @@ public class FilterCommand extends Command {
         java.util.List<Integer> matchingIndices = new java.util.ArrayList<>();
 
         for (int i = 0; i < tradeList.size(); i++) {
+            boolean matchesTicker;
+            boolean matchesStrategy;
+            boolean matchesDate;
             Trade trade = tradeList.getTrade(i);
-            boolean matchesTicker = ticker.isEmpty() || trade.getTicker().equals(ticker);
-            boolean matchesStrategy = strategy.isEmpty() || trade.getStrategy().equalsIgnoreCase(strategy);
-            boolean matchesDate = date.isEmpty() || trade.getDate().equals(date);
+            if (isPartial) {
+                matchesTicker = ticker.isEmpty() || trade.getTicker().contains(ticker);
+                matchesStrategy = strategy.isEmpty() || 
+                        trade.getStrategy().toLowerCase().contains(strategy.toLowerCase());
+                matchesDate = date.isEmpty() || trade.getDate().contains(date);
+            } else {
+                matchesTicker = ticker.isEmpty() || trade.getTicker().equals(ticker);
+                matchesStrategy = strategy.isEmpty() || trade.getStrategy().equalsIgnoreCase(strategy);
+                matchesDate = date.isEmpty() || trade.getDate().equals(date);
+            }
 
             if (matchesTicker && matchesStrategy && matchesDate) {
                 matchingIndices.add(i);
