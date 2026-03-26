@@ -21,7 +21,8 @@ import tradelog.model.TradeList;
  */
 public class StorageTest {
 
-    /** * JUnit automatically creates this temporary directory before tests
+    /**
+     * JUnit automatically creates this temporary directory before tests
      * and securely deletes it after the tests finish.
      */
     @TempDir
