@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class FilterCommandTest {
+public class FilterCommandTest {
 
     private String captureOutput(Runnable action) {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -27,20 +27,20 @@ class FilterCommandTest {
     }
 
     @Test
-    void constructor_noCriteria_throwsTradeLogException() {
+    public void constructor_noCriteria_throwsTradeLogException() {
         String args = "";
         TradeLogException ex = assertThrows(TradeLogException.class, () -> new FilterCommand(args));
         assertTrue(ex.getMessage().contains("Use at least one filter"));
     }
 
     @Test
-    void constructor_withValidCriteria_doesNotThrow() {
+    public void constructor_withValidCriteria_doesNotThrow() {
         String args = "t/AAPL";
         assertDoesNotThrow(() -> new FilterCommand(args));
     }
 
     @Test
-    void execute_filterByTicker_printsExpectedTrade() {
+    public void execute_filterByTicker_printsExpectedTrade() {
         TradeList tradeList = new TradeList();
         tradeList.addTrade(new Trade("AAPL", "2026-03-01", "Long", 100, 110, 95, "Win", "Breakout"));
         tradeList.addTrade(new Trade("MSFT", "2026-03-02", "Short", 200, 190, 210, "Win", "Momentum"));
@@ -54,10 +54,33 @@ class FilterCommandTest {
 
         assertTrue(output.contains("AAPL | 2026-03-01 | Long"));
         assertFalse(output.contains("MSFT | 2026-03-02 | Short"));
+        assertTrue(output.contains("Overall Performance:"));
+        assertTrue(output.contains("Total Trades: 1"));
+        assertTrue(output.contains("Win Rate: 100%"));
+        assertTrue(output.contains("Total R: +2.00R"));
+        assertTrue(output.contains("Overall EV: +2.00R"));
     }
 
     @Test
-    void execute_filterNoMatch_showsNoMatchMessage() {
+    public void execute_filterByStrategy_calculatesCorrectAggregates() {
+        TradeList tradeList = new TradeList();
+        tradeList.addTrade(new Trade("AAPL", "2026-03-01", "Long", 100, 110, 95, "Win", "Breakout"));
+        tradeList.addTrade(new Trade("TSLA", "2026-03-03", "Long", 100, 90, 95, "Loss", "Breakout"));
+
+        Ui ui = new Ui();
+        Storage storage = new Storage("./data/trades.txt");
+
+        FilterCommand command = new FilterCommand("strat/Breakout");
+        String output = captureOutput(() -> command.execute(tradeList, ui, storage));
+
+        assertTrue(output.contains("Total Trades: 2"));
+        assertTrue(output.contains("Win Rate: 50%"));
+        assertTrue(output.contains("Total R: +0.00R"));
+        assertTrue(output.contains("Overall EV: +0.00R"));
+    }
+
+    @Test
+    public void execute_filterNoMatch_showsNoMatchMessage() {
         TradeList tradeList = new TradeList();
         tradeList.addTrade(new Trade("AAPL", "2026-03-01", "Long", 100, 110, 95, "Win", "Breakout"));
 
@@ -71,7 +94,7 @@ class FilterCommandTest {
     }
 
     @Test
-    void execute_filterByPartialTicker_printsExpectedTrade() {
+    public void execute_filterByPartialTicker_printsExpectedTrade() {
         TradeList tradeList = new TradeList();
         tradeList.addTrade(new Trade("AAPL", "2026-03-01", "Long", 100, 110, 95, "Win", "Breakout"));
         tradeList.addTrade(new Trade("MSFT", "2026-03-02", "Short", 200, 190, 210, "Win", "Momentum"));
